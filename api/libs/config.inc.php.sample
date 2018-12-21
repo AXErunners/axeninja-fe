@@ -1,0 +1,46 @@
+<?php
+
+/*
+    This file is part of AXE Ninja.
+    https://github.com/elbereth/axeninja-fe
+
+    AXE Ninja is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    AXE Ninja is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with AXE Ninja.  If not, see <http://www.gnu.org/licenses/>.
+
+ */
+
+// Copy this file to config.inc.php and change configuration below
+
+// Path to the cache folder (files will be created in there, best if outside www access)
+DEFINE('CACHEFOLDER',"/home/axeninja/cache/");
+
+// Path to the data folder (must be accessible by the website)
+DEFINE('DATAFOLDER',"/home/axeninja/www/data/");
+
+// Semaphores
+DEFINE('DMN_CRON_MNFL_SEMAPHORE','/var/run/axe-www-cron-mnfl.pid');
+DEFINE('DMN_CRON_BK24_SEMAPHORE','/var/run/axe-www-cron-bk24.pid');
+DEFINE('DMN_CRON_MNST_SEMAPHORE','/var/run/axe-www-cron-mnst.pid');
+DEFINE('DMN_CRON_BKCS_SEMAPHORE','/var/run/axe-www-cron-bkcs.pid');
+DEFINE('DMN_CRON_GOVL_SEMAPHORE','/var/run/axe-www-cron-govl.pid');
+DEFINE('DMN_CRON_GOPR_SEMAPHORE','/var/run/axe-www-cron-gopr.pid');
+DEFINE('DMN_CRON_GOTR_SEMAPHORE','/var/run/axe-www-cron-gotr.pid');
+DEFINE('DMN_CRON_BKSB_SEMAPHORE','/var/run/axe-www-cron-bksb.pid');
+
+// Indicate here all MySQL configuration to connect to AXE Ninja Database
+DEFINE('MYSQLUSER',"axeninja-api");
+DEFINE('MYSQLPASS',"anyrandompassword");
+DEFINE('MYSQLDATABASE',"axeninja");
+DEFINE('MYSQLHOST',"localhost");
+
+?>

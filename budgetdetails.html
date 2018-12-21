@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<!--
+This file is part of AXE Ninja.
+https://github.com/elbereth/axeninja-fe
+
+AXE Ninja is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+AXE Ninja is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with AXE Ninja.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AXE Ninja - Budget Details</title>
+
+    <link rel="icon" href="/static/axeninja-favicon.ico" />
+    <link rel="icon" type="image/png" href="/static/axeninja-favicon.png" />
+    <link href="/static/bootstrap-3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/axeninja-template.css" rel="stylesheet">
+    <link href="/static/datatables/datatables.min.css" rel="stylesheet">
+    <link href="/static/font-awesome-4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="/static/html5shiv.min.js"></script>
+      <script src="/static/respond.min.js"></script>
+    <![endif]-->
+
+  </head>
+  <body>
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+          <a class="navbar-brand" href="/"><img style="margin-top: -13px;" src="/static/axeninja-logo48x48.png" width="48" height="48" border="0"></a>
+        </div>
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="/blocks.html"><i class="fa fa-link fa-fw" aria-hidden="true"></i> Blockchain</a></li>
+                <li><a href="/masternodes.html"><i class="fa fa-server fa-fw" aria-hidden="true"></i> Masternodes</a></li>
+                <li><a href="/governance.html"><i class="fa fa-balance-scale fa-fw" aria-hidden="true"></i> Governance</a></li>
+                <li><a name="menuitemexplorer" href="https://explorer.axeninja.pl"><i class="fa fa-search fa-fw" aria-hidden="true"></i> Explorer</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-wrench fa-fw" aria-hidden="true"></i> Other Tools <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li class="dropdown-header">Official Pages</li>
+                        <li><a href="http://www.axe.org/">Axe Homepage</a></li>
+                        <li><a href="https://github.com/axerunners/axe">Axe Github Sources</a></li>
+                        <li><a href="https://www.axe.org/downloads/">Axe Binaries</a></li>
+                        <li class="divider"></li>
+                        <li class="dropdown-header">Forums / Wiki</li>
+                        <li><a href="https://axerunners.atlassian.net/wiki/">Official Axe Wiki</a></li>
+                        <li><a href="https://axe.org/forum">Official Axe Forum</a></li>
+                        <li><a href="https://bitcointalk.org/index.php?topic=421615">BitcoinTalk (BTC) - Axe ANN</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+    <div class="container-fluid">
+
+      <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+          <ul class="nav nav-sidebar">
+            <li><a href="#">Budget information</a></li>
+            <li><a href="#get2vote">How to vote for this budget</a></li>
+          </ul>
+          <ul class="nav nav-sidebar">
+            <li><a href="#votes">Votes list</a></li>
+          </ul>
+            <ul class="nav nav-sidebar">
+                <li><a href="#superblocks">Super-block Payments</a></li>
+            </ul>
+        </div>
+      <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+      <div class="page-header">
+        <h1>AXE Ninja - Budget Details</h1>
+        <p>Page is dynamically refreshed (JavaScript required). All times are in GMT/UTC.<br/>
+Versions: <i>HTML v1.2.4 / JS v<span id="axeninjajsversion">?.?.?</span></i> (hint: might need to Ctrl+F5 to update JS)</p>
+      </div>
+    <div id="testnetalert" class="alert alert-danger" style="display: none">
+      <h2>THIS IS TESTNET!</h2>
+    </div>
+          <div id="gobjectwarning" class="alert alert-warning">
+              <h2>This is OBSOLETE since v0.12.1 release!</h2>
+              <p>Go to the <a href="/governance.html">Governance Proposals Monitoring</a> page, for the new budget info.</p>
+          </div>
+    <div class="alert alert-info">
+<p>If this page is useful to you, spare some coin: <a href="http://chainz.cryptoid.info/axe/address.dws?XkfkHqMnhvQovo7kXQjvnNiFnQhRNZYCsz.htm">XkfkHqMnhvQovo7kXQjvnNiFnQhRNZYCsz</a><br>
+Brought to you by <a href="https://www.axe.org/forum/members/elbereth.175/">elberethzone</a> (<a href="https://keybase.io/elbereth/key.asc">GPG</a>).</p>
+    </div>
+<h2>Budget information:</h2>
+<table id="budgetinfo" class="table table-striped table-condensed table-responsive text-nowrap">
+  <tbody>
+  <tr>
+      <td><i class="fa fa-tag"></i></td>
+      <th>Budget Name</th>
+      <td id="budgetid">???</td>
+  </tr>
+    <tr>
+      <td><i class="fa fa-sign-in"></i></td>
+      <th>Budget Hash</th>
+      <td id="budgethash">???</td>
+    </tr>
+  <tr>
+      <td><i class="fa fa-link"></i></td>
+      <th>Budget URL</th>
+      <td id="budgeturl">???</td>
+  </tr>
+  <tr>
+      <td><i class="fa fa-sign-out"></i></td>
+      <th>Budget Fee Transaction</th>
+      <td id="budgetfee">???</td>
+  </tr>
+    <tr>
+      <td><i class="fa fa-hourglass-start"></i></td>
+      <th>Block Start</th>
+      <td id="budgetblockstart">???</td>
+    </tr>
+    <tr>
+      <td><i class="fa fa-hourglass-end"></i></td>
+      <th>Block End</th>
+      <td id="budgetblockend">???</td>
+    </tr>
+    <tr>
+      <td><i class="fa fa-money"></i></td>
+      <th>Monthly Amount</th>
+      <td id="budgetmonthlyamount">???</td>
+    </tr>
+    <tr>
+      <td><i class="fa fa-money"></i></td>
+      <th>Total Amount</th>
+      <td id="budgettotalamount">???</td>
+    </tr>
+    <tr>
+      <td><i class="fa fa-clock-o"></i></td>
+      <th>Remaining Payments</th>
+      <td id="budgetremainingpayments">???</td>
+    </tr>
+    <tr>
+      <td><i class="fa fa-clock-o"></i></td>
+      <th>Total Payments</th>
+      <td id="budgettotalpayments">???</td>
+    </tr>
+    <tr>
+      <td><i class="fa fa-key"></i></td>
+      <th>Payment Address</th>
+      <td id="budgetpubkey">???</td>
+    </tr>
+    <tr>
+      <td><i class="fa fa-heartbeat"></i></td>
+      <th>Budget Status</th>
+      <td id="budgetstatus">???</td>
+    </tr>
+    <tr>
+      <td><i class="fa fa-clock-o"></i></td>
+      <th>Last Paid</th>
+      <td id="budgetlastpaid">???</td>
+    </tr>
+    <tr>
+      <td><i class="fa fa-plus-square"></i></td>
+      <th>Votes YES</th>
+      <td id="budgetyes">???</td>
+    </tr>
+    <tr>
+      <td><i class="fa fa-minus-square"></i></td>
+      <th>Votes NO</th>
+      <td id="budgetno">???</td>
+    </tr>
+    <tr>
+      <td><i class="fa fa-check-square"></i></td>
+      <th>Votes YES still needed</th>
+      <td id="budgetyesremaining">???</td>
+    </tr>
+    <tr>
+      <td><i class="fa fa-clock-o"></i></td>
+      <th>Last Seen</th>
+      <td id="budgetlastseen">???</td>
+    </tr>
+    <tr>
+      <td><i class="fa fa-play-circle-o"></i></td>
+      <th>First Seen</th>
+      <td id="budgetfirstseen">???</td>
+    </tr>
+  </tbody>
+</table>
+<p>(Last refresh: <span id="budgetinfoLR">Never</span>)<br>
+(Using <span id="fiatAXEBTCval">???</span> BTC/AXE value from <span id="fiatAXEBTCwho">???</span> [<span id="fiatAXEBTCwhen">???</span>] and <span id="fiatUSDBTCval">???</span> USD/BTC value from <span id="fiatUSDBTCwho">???</span> [<span id="fiatUSDBTCwhen">???</span>])<br>
+(Also using <span id="fiatEURBTCval">???</span> EUR/BTC value from <span id="fiatEURBTCwho">???</span> [<span id="fiatEURBTCwhen">???</span>])</p>
+          <hr/>
+          <h2 id="get2vote">Vote for this budget:</h2>
+          <div id="voteisover" class="panel panel-info" style="display: none;">
+              <div class="panel-heading">Vote is over</div>
+              <div class="panel-body">
+                  <p>You cannot vote for this project anymore.<br>It was unlisted on <span id="budgetlastseen2">???</span>.</p>
+              </div>
+          </div>
+          <div id="voteisover2" class="panel panel-info" style="display: none;">
+              <div class="panel-heading">Vote is over</div>
+              <div class="panel-body">
+                  <p>You don't need to vote for this project anymore.<br>It was fully paid with last payment on <span id="budgetlastpaid2">???</span>.</p>
+              </div>
+          </div>
+          <div id="voteyes" class="panel panel-success">
+              <div class="panel-heading">Vote YES</div>
+              <div class="panel-body">
+                  <p>From your masternode cold wallet (the one having your 1000 AXE vins and where the revenue arrives).</p>
+                  <p>To vote from axe-qt (graphical wallet), go to Tools > Debug console and type:</p>
+                  <pre>mnbudget vote-many <span id="budgethash1">???</span> yes</pre>
+                  <p>To vote from axe-cli (command line, axed must be running), type:</p>
+                  <pre>axe-cli mnbudget vote-many <span id="budgethash2">???</span> yes</pre>
+              </div>
+          </div>
+          <div id="voteno" class="panel panel-danger">
+              <div class="panel-heading">Vote NO</div>
+              <div class="panel-body">
+                  <p>From your masternode cold wallet (the one having your 1000 AXE vins and where the revenue arrives).</p>
+                  <p>To vote from axe-qt (graphical wallet), go to Tools > Debug console and type:</p>
+                  <pre>mnbudget vote-many <span id="budgethash3">???</span> no</pre>
+                  <p>To vote from axe-cli (command line, axed must be running), type:</p>
+                  <pre>axe-cli mnbudget vote-many <span id="budgethash4">???</span> no</pre>
+              </div>
+          </div>
+          <hr/>
+<h2 id="votes">Masternodes votes</h2>
+<div class="table-responsive">
+<table id="votestable" class="table table-striped table-condensed table-responsive text-nowrap">
+ <thead>
+  <tr>
+    <th>Date</th>
+    <th>Masternode Hash-Index</th>
+    <th>Vote</th>
+    <th>Vote Hash</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+    <td colspan="4">Please wait while loading... (JavaScript neeeded)</td>
+  </tr>
+ </tbody>
+</table>
+<p>(Last refresh: <span id="votestableLR">Never</span>)</p>
+</div>
+<hr/>
+          <h2 id="superblocks">Super-block Payments</h2>
+          <div class="table-responsive">
+              <table id="superblockstable" class="table table-striped table-condensed table-responsive text-nowrap">
+                  <thead>
+                  <tr>
+                      <th>Date&nbsp;Found</th>
+                      <th>Height</th>
+                      <th>Found&nbsp;by</th>
+                      <th>Difficulty</th>
+                      <th>Budget Payment</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr>
+                      <td colspan="5">Please wait while loading... (JavaScript neeeded)</td>
+                  </tr>
+                  </tbody>
+              </table>
+              <p>(Last refresh: <span id="superblockstableLR">Never</span>)</p>
+          </div>
+          <hr/>
+</div>
+</div>
+</div>
+<div id="footer">
+  <div class="container">
+      <p style="font-size:small;" align=right>Brought to you by <a href="https://www.axe.org/forum/members/elbereth.175/">elberethzone</a>. If this page is useful to you, spare some coin: <a href="http://chainz.cryptoid.info/axe/address.dws?XkfkHqMnhvQovo7kXQjvnNiFnQhRNZYCsz.htm">XkfkHqMnhvQovo7kXQjvnNiFnQhRNZYCsz</a><br>Contact me securely via <a href="https://keybase.io/elbereth">Keybase</a>. Check source (<a href="/LICENSE">GPLv3</a>) on: <a href="https://github.com/elbereth/axeninja-fe">GitHub</a>.</p>
+  </div>
+</div>
+    <script src="/static/jquery-2.2.4.min.js"></script>
+    <script src="/static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script src="/static/highcharts.js"></script>
+    <script src="/static/highcharts-more.js"></script>
+    <script src="/static/datatables/datatables.min.js"></script>
+    <script src="axeninja-config.js"></script>
+    <script src="axeninja-common.js"></script>
+    <script src="axeninja-budgetdetails.js"></script>
+  </body>
+</html>
+
