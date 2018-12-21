@@ -34,4 +34,4 @@ git clone https://github.com/elbereth/axeninja-fe.git
 ## Configuration:
 * Todo...
 
-_Based on Axe Ninja by Alexandre (aka elbereth) Devilliers_
+_Based on Dash Ninja by Alexandre (aka elbereth) Devilliers_
