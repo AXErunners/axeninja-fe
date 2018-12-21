@@ -24,7 +24,7 @@ For the REST API:
 * Go to the root of your website for Axe monitoring (ex: cd /home/axeninja2/www/)
 * Get latest code from github:
 ```shell
-git clone https://github.com/elbereth/axeninja-fe.git
+git clone https://github.com/axerunners/axeninja-fe.git
 ```
 
 * Configure php to answer only to calls to api/index.php rewriting to end-point api/
