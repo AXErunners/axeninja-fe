@@ -18,7 +18,7 @@
  */
 
 // AXE Ninja Front-End (axeninja-fe) - Blocks (v2)
-// By elberethzone / https://axetalk.org/members/elbereth.175/
+// By elberethzone / https://dashtalk.org/members/axerunners.175/
 
 var axeninjaversion = '2.5.9';
 var tableBlocks = null;
@@ -470,10 +470,10 @@ $(document).ready(function(){
               $('td',row).eq(5).css({"background-color": "#ffcb8f"});
               $('td',row).eq(6).css({"background-color": "#ffcb8f"});
             }
-            if (data.BlockMNProtocol == 70210) {
+            if (data.BlockMNProtocol == 70213) {
               $('td',row).eq(8).css({"background-color": "#8FFF8F"});
             }
-            else if (data.BlockMNProtocol < 70102) {
+            else if (data.BlockMNProtocol < 70210) {
               $('td',row).eq(8).css({"background-color": "#FFCB8F"});
             }
             else {

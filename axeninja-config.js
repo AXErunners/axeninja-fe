@@ -34,7 +34,7 @@ var axeninjacoin = ['AXE','tAXE'];
 
 // URLs
 // Block info
-// ["https://explorer.axeninja.pl/block/%%b%%","elberethzone's Axe Blockchain Explorer"]
+// ["https://explorer.axeninja.pl/block/%%b%%","Axe Blockchain Explorer"]
 var axeninjablockexplorer = [[["http://chainz.cryptoid.info/axe/block.dws?%%b%%.htm","cryptoID Axe Blockchain Explorer"]],
                           [["https://test.explorer.axeninja.pl/block/%%b%%","AXE Ninja Testnet Blockchain Explorer"],
                            ["https://test.insight.axe.siampm.com/block/%%b%%","Alternate Testnet Axe Blockchain Explorer"]]];
@@ -46,17 +46,20 @@ var axeninjamndetail = [[["/mndetails.html?mnpubkey=%%a%%","AXE Ninja Masternode
 var axeninjamndetailvin = [[["/mndetails.html?mnoutput=%%a%%","AXE Ninja Masternode Detail"]],
                             [["/mndetails.html?mnoutput=%%a%%","AXE Ninja Testnet Masternode Detail"]]];
 
-// ["https://explorer.axeninja.pl/address/%%a%%","elberethzone's Axe Blockchain Explorer"],
+var axeninjamndetailprotx = [[["/mndetails.html?protxhash=%%a%%","AXE Ninja Masternode Detail"]],
+                              [["/mndetails.html?protxhash=%%a%%","AXE Ninja Testnet Masternode Detail"]]];
+
+// ["https://explorer.axeninja.pl/address/%%a%%","Axe Blockchain Explorer"],
 var axeninjaaddressexplorer = [[["https://chainz.cryptoid.info/axe/address.dws?%%a%%.htm","cryptoID Axe Blockchain Explorer"]],
                                 [["https://test.explorer.axeninja.pl/address/%%a%%","AXE Ninja Testnet Blockchain Explorer"],
                                  ["https://test.insight.axe.siampm.com/address/%%a%%","Alternate Testnet Axe Blockchain Explorer"]]];
-// ["http://explorer.axeninja.pl/tx/%%a%%","elberethzone's Axe Blockchain Explorer"],
+// ["http://explorer.axeninja.pl/tx/%%a%%","Axe Blockchain Explorer"],
 var axeninjatxexplorer = [[["https://chainz.cryptoid.info/axe/tx.dws?%%a%%.htm","cryptoID Axe Blockchain Explorer"]],
                            [["http://test.explorer.axeninja.pl/tx/%%a%%","AXE Ninja Testnet Blockchain Explorer"],
                             ["https://test.insight.axe.siampm.com/tx/%%a%%","Alternate Testnet Axe Blockchain Explorer"]]];
 
 // Search query
-// ["https://explorer.axeninja.pl/search?q=%%q%%","elberethzone's Axe Blockchain Explorer"],
+// ["https://explorer.axeninja.pl/search?q=%%q%%","Axe Blockchain Explorer"],
 var axeninjaqueryexplorer = [[["https://chainz.cryptoid.info/axe/search.dws?q=%%q%%","cryptoID Axe Blockchain Explorer"]],
                             [["https://test.explorer.axeninja.pl/search?q=%%q%%","AXE Ninja Testnet Blockchain Explorer"],
                              ["http://test.explorer.darkcoin.qa/search?q=%%q%%","Official Testnet Axe Blockchain Explorer"]]];

@@ -17,19 +17,19 @@
 
  */
 
-// AXE Ninja Front-End (axeninja-fe) - Masternode List (v2)
+// AXE Ninja Front-End (axeninja-fe) - Deterministic Masternode List (ProTx)
 // By elberethzone / https://www.dash.org/forum/members/elbereth.175/
 
-var axeninjaversion = '2.5.7';
+var axeninjaversion = '0.2.1';
 var tableLocalNodes = null;
 var tableBlockConsensus = null;
 var tableMNList = null;
 var chartMNVersions = null;
-var axeversiondefault = "0.12.3.2";
+var axeversiondefault = "0.13.0.0";
 var axeversion = axeversiondefault;
 var axeversioncheck = axeversion;
 var axeversionsemaphore = false;
-var sentinelversiondefault = "1.2.0";
+var sentinelversiondefault = "1.3.0";
 var sentinelversion = sentinelversiondefault;
 var axemaxprotocol = 0;
 
@@ -57,6 +57,16 @@ if (typeof axeninjatestneti2p !== 'undefined') {
     if (window.location.hostname == axeninjatestneti2p) {
         axeninjatestnet = 1;
     }
+}
+
+if (typeof axeninjamndetailprotx  === 'undefined') {
+    var axeninjamndetailprotx  = [[],[]];
+}
+if (typeof axeninjamndetailprotx [0] === 'undefined') {
+    axeninjamndetailprotx [0] = [];
+}
+if (typeof axeninjamndetail[1] === 'undefined') {
+    axeninjamndetailprotx [1] = [];
 }
 
 if (typeof axeninjamndetail === 'undefined') {
@@ -180,11 +190,15 @@ function getLatestaxeVersion() {
         }
         displayaxeVersion(axeversion,sentinelversion);
     }
-    if ((axeversion.length > 2) && (axeversion.substr(axeversion.length - 2) == ".0")) {
-        axeversioncheck = axeversion.substr(0,axeversion.length-2);
+    var testrc = axeversion.indexOf("-rc");
+    if (testrc > -1) {
+        axeversioncheck = axeversion.substr(0,testrc);
     }
     else {
         axeversioncheck = axeversion;
+    }
+    if ((axeversioncheck.length > 2) && (axeversioncheck.substr(axeversioncheck.length - 2) == ".0")) {
+        axeversioncheck = axeversioncheck.substr(0,axeversioncheck.length-2);
     }
     return axeversioncheck;
 };
@@ -478,27 +492,25 @@ $(document).ready(function() {
         $('#mnlistLRHR').text( deltaTimeStampHRlong(json.data.cache.time, currenttimestamp())+" ago");
         var versioninfo = 'Unknown';
         var dataVersionCount = [];
-        var dataProtocolCount = [];
         var mnregexp = $('#mnregexp').val();
-        for ( var i=0, ien=json.data.masternodes.length ; i<ien ; i++ ) {
-            if (parseInt(json.data.masternodes[i].MasternodeProtocol) > axemaxprotocol) {
-                axemaxprotocol = parseInt(json.data.masternodes[i].MasternodeProtocol);
+        for ( var i=0, ien=json.data.protx.length ; i<ien ; i++ ) {
+//            if (parseInt(json.data.protx[i].MasternodeProtocol) > axemaxprotocol) {
+//                axemaxprotocol = parseInt(json.data.masternodes[i].MasternodeProtocol);
+//            }
+            activeCount += json.data.protx[i].listedLast5Min;
+
+            if (uniqueIPs.indexOf(json.data.protx[i].state.addrIP+":"+json.data.protx[i].state.addrPort) == -1) {
+                uniqueIPs.push( json.data.protx[i].state.addrIP+":"+json.data.protx[i].state.addrPort );
             }
-            if (json.data.masternodes[i].ActiveCount > 0) {
-                activeCount++;
-            }
-            if (uniqueIPs.indexOf(json.data.masternodes[i].MasternodeIP+":"+json.data.masternodes[i].MasternodePort) == -1) {
-                uniqueIPs.push( json.data.masternodes[i].MasternodeIP+":"+json.data.masternodes[i].MasternodePort );
-            }
-            if ((json.data.masternodes[i].Portcheck != false) && json.data.masternodes[i].Portcheck.hasOwnProperty("SubVer")) {
-                if ((json.data.masternodes[i].Portcheck.SubVer.length > 10) && (json.data.masternodes[i].Portcheck.SubVer.substring(0,9) == '/Satoshi:') && (json.data.masternodes[i].Portcheck.SubVer.substring(json.data.masternodes[i].Portcheck.SubVer.length-1) == '/')) {
-                    versioninfo = json.data.masternodes[i].Portcheck.SubVer.substring(9,json.data.masternodes[i].Portcheck.SubVer.indexOf('/',10));
+            if ((json.data.protx[i].Portcheck != false) && json.data.protx[i].Portcheck.hasOwnProperty("SubVer")) {
+                if ((json.data.protx[i].Portcheck.SubVer.length > 10) && (json.data.protx[i].Portcheck.SubVer.substring(0,9) == '/Satoshi:') && (json.data.protx[i].Portcheck.SubVer.substring(json.data.protx[i].Portcheck.SubVer.length-1) == '/')) {
+                    versioninfo = json.data.protx[i].Portcheck.SubVer.substring(9,json.data.protx[i].Portcheck.SubVer.indexOf('/',10));
                 }
-                else if ((json.data.masternodes[i].Portcheck.SubVer.length > 7) && (json.data.masternodes[i].Portcheck.SubVer.substring(0,6) == '/Core:') && (json.data.masternodes[i].Portcheck.SubVer.substring(json.data.masternodes[i].Portcheck.SubVer.length-1) == '/')) {
-                    versioninfo = json.data.masternodes[i].Portcheck.SubVer.substring(6,json.data.masternodes[i].Portcheck.SubVer.indexOf('/',6));
+                else if ((json.data.protx[i].Portcheck.SubVer.length > 7) && (json.data.protx[i].Portcheck.SubVer.substring(0,6) == '/Core:') && (json.data.protx[i].Portcheck.SubVer.substring(json.data.protx[i].Portcheck.SubVer.length-1) == '/')) {
+                    versioninfo = json.data.protx[i].Portcheck.SubVer.substring(6,json.data.protx[i].Portcheck.SubVer.indexOf('/',6));
                 }
-                else if ((json.data.masternodes[i].Portcheck.SubVer.length > 11) && (json.data.masternodes[i].Portcheck.SubVer.substring(0,11) == '/Axe Core:') && (json.data.masternodes[i].Portcheck.SubVer.substring(json.data.masternodes[i].Portcheck.SubVer.length-1) == '/')) {
-                    versioninfo = json.data.masternodes[i].Portcheck.SubVer.substring(11,json.data.masternodes[i].Portcheck.SubVer.indexOf('/',11));
+                else if ((json.data.protx[i].Portcheck.SubVer.length > 11) && (json.data.protx[i].Portcheck.SubVer.substring(0,11) == '/Axe Core:') && (json.data.protx[i].Portcheck.SubVer.substring(json.data.protx[i].Portcheck.SubVer.length-1) == '/')) {
+                    versioninfo = json.data.protx[i].Portcheck.SubVer.substring(11,json.data.protx[i].Portcheck.SubVer.indexOf('/',11));
                 }
                 else {
                     versioninfo = "Unknown";
@@ -507,58 +519,37 @@ $(document).ready(function() {
             else {
                 versioninfo = "Unknown";
             }
-            versioninfo = versioninfo+" ("+json.data.masternodes[i].MasternodeProtocol+")";
             if (dataVersionCount.hasOwnProperty(versioninfo)) {
                 dataVersionCount[versioninfo]++;
             }
             else {
                 dataVersionCount[versioninfo] = 1;
             }
-            if (dataProtocolCount.hasOwnProperty(parseInt(json.data.masternodes[i].MasternodeProtocol))) {
-                dataProtocolCount[parseInt(json.data.masternodes[i].MasternodeProtocol)]++;
-            }
-            else {
-                dataProtocolCount[parseInt(json.data.masternodes[i].MasternodeProtocol)] = 1;
-            }
         }
 
         var dataSet = [];
         for (version in dataVersionCount) {
             if (dataVersionCount.hasOwnProperty(version)) {
-                dataSet.push( [version, Math.round((dataVersionCount[version]/json.data.masternodes.length)*10000)/100] );
+                dataSet.push( [version, Math.round((dataVersionCount[version]/json.data.protx.length)*10000)/100] );
             }
         }
         chartMNVersions = $('#mnversions').highcharts();
         chartMNVersions.series[0].setData(dataSet,true);
 
-        var inactiveCount = json.data.masternodes.length - activeCount;
+        var inactiveCount = json.data.protx.length - activeCount;
 
         $('#mnactive').text( activeCount );
         $('#mninactive').text( inactiveCount );
-        $('#mntotal').text( json.data.masternodes.length );
+        $('#mntotal').text( json.data.protx.length );
         $('#uniquemnips').text( uniqueIPs.length );
-        $('#mnlatestprotocol').text( axemaxprotocol );
-        var ratiolatest = (dataProtocolCount[axemaxprotocol]/json.data.masternodes.length);
-        var clscolor = "label-danger";
-        if (ratiolatest < 0.5) {
-            clscolor = "label-danger";
-        }
-        else if (ratiolatest < 0.75) {
-            clscolor = "label-warning";
-        }
-        else {
-            clscolor = "label-success";
-        }
-        $('#mnlatestprotocolpercent').text( Math.round((ratiolatest*10000)/100));
-        $('#mnactivelatest').text( dataProtocolCount[axemaxprotocol] ).removeClass("label-success").removeClass("label-warning").removeClass("label-danger").addClass(clscolor);
 
         if (mnregexp != "") {
             $('#mnlist').DataTable().search(mnregexp, true, false).draw();
         }
     } );
     tableMNList = $('#mnlist').dataTable( {
-        ajax: { url: "/data/masternodeslistfull-"+axeninjatestnet+".json",
-                dataSrc: 'data.masternodes',
+        ajax: { url: "/api/protx?testnet="+axeninjatestnet+"?exstatus=1&portcheck=1&balance=1",
+                dataSrc: 'data.protx',
             cache: true },
         lengthMenu: [ [50, 100, 250, 500, -1], [50, 100, 250, 500, "All"] ],
         processing: true,
@@ -569,95 +560,95 @@ $(document).ready(function() {
                     return ''
                 } },
             { data: null, render: function ( data, type, row ) {
-                var outtxt = '';
-                if (type != 'sort') {
-                    if ((axeninjamndetailvin[axeninjatestnet].length > 0) || (axeninjatxexplorer[axeninjatestnet].length > 0)) {
-                        var ix = 0;
-                        for ( var i=0, ien=axeninjamndetailvin[axeninjatestnet].length ; i<ien ; i++ ) {
-                            if (ix == 0) {
-                                outtxt += '<a href="'+axeninjamndetailvin[axeninjatestnet][0][0].replace('%%a%%',data.MasternodeOutputHash+'-'+data.MasternodeOutputIndex)+'" data-toggle="tooltip" data-placement="left" title="'+data.MasternodeOutputHash+'-'+data.MasternodeOutputIndex+'">'+data.MasternodeOutputHash.substring(0,8)+'<i class="fa fa-ellipsis-h" aria-hidden="true"></i>\n-'+data.MasternodeOutputIndex+'</a>';
+                    var outtxt = '';
+                    if (type != 'filter') {
+                        if (axeninjamndetailprotx[axeninjatestnet].length > 0) {
+                            var ix = 0;
+                            for ( var i=0, ien=axeninjamndetailprotx[axeninjatestnet].length ; i<ien ; i++ ) {
+                                if (ix == 0) {
+                                    outtxt += '<a href="'+axeninjamndetailprotx[axeninjatestnet][0][0].replace('%%a%%',data.proTxHash)+'" data-toggle="tooltip" data-placement="left" title="'+data.proTxHash+'">'+data.proTxHash.substring(0,8)+'<i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>';
+                                }
+                                else {
+                                    outtxt += '<a href="'+axeninjamndetailprotx[axeninjatestnet][i][0].replace('%%a%%',data.proTxHash)+'">['+ix+']</a>';
+                                }
+                                ix++;
                             }
-                            else {
-                                outtxt += '<a href="'+axeninjamndetailvin[axeninjatestnet][i][0].replace('%%a%%',data.MasternodeOutputHash+'-'+data.MasternodeOutputIndex)+'">['+ix+']</a>';
-                            }
-                            ix++;
                         }
+                        else {
+                            outtxt = data.proTxHash;
+                        }
+                    }
+                    else {
+                        outtxt = data.proTxHash;
+                    }
+                    return outtxt;
+                } },
+            { data: null, render: function ( data, type, row ) {
+                var outtxt = '';
+                if (type != 'filter') {
+                    if (axeninjatxexplorer[axeninjatestnet].length > 0) {
+                        var ix = 0;
                         for ( var i=0, ien=axeninjatxexplorer[axeninjatestnet].length ; i<ien ; i++ ) {
                             if (ix == 0) {
-                                outtxt += '<a href="'+axeninjatxexplorer[axeninjatestnet][0][0].replace('%%a%%',data.MasternodeOutputHash)+'" data-toggle="tooltip" data-placement="left" title="'+data.MasternodeOutputHash+'-'+data.MasternodeOutputIndex+'">'+data.MasternodeOutputHash.substring(0,8)+'...-'+data.MasternodeOutputIndex+'</a>';
+                                outtxt += '<a href="'+axeninjatxexplorer[axeninjatestnet][0][0].replace('%%a%%',data.collateralHash)+'" data-toggle="tooltip" data-placement="left" title="'+data.collateralHash+'-'+data.collateralIndex+'">'+data.collateralHash.substring(0,8)+'...-'+data.collateralIndex+'</a>';
                             }
                             else {
-                                outtxt += '<a href="'+axeninjatxexplorer[axeninjatestnet][i][0].replace('%%a%%',data.MasternodeOutputHash)+'">['+ix+']</a>';
+                                outtxt += '<a href="'+axeninjatxexplorer[axeninjatestnet][i][0].replace('%%a%%',data.collateralHash)+'">['+ix+']</a>';
                             }
                             ix++;
                         }
                     }
                     else {
-                        outtxt = data.MasternodeOutputHash+'-'+data.MasternodeOutputIndex;
+                        outtxt = data.collateralHash+'-'+data.collateralIndex;
                     }
                 }
                 else {
-                    outtxt = data.MasternodeOutputHash+'-'+data.MasternodeOutputIndex;
+                    outtxt = data.collateralHash+'-'+data.collateralIndex;
                 }
                 return outtxt;
             } },
             { data: null, render: function ( data, type, row) {
                 var outtxt = '';
-                if (type != 'sort') {
-                    if ((axeninjamndetail[axeninjatestnet].length > 0) || (axeninjaaddressexplorer[axeninjatestnet].length > 0)) {
+                if (type != 'filter') {
+                    if (axeninjaaddressexplorer[axeninjatestnet].length > 0) {
                         var ix = 0;
-                        for ( var i=0, ien=axeninjamndetail[axeninjatestnet].length ; i<ien ; i++ ) {
-                            if (ix == 0) {
-                                outtxt += '<a href="'+axeninjamndetail[axeninjatestnet][0][0].replace('%%a%%',data.MasternodePubkey)+'">'+data.MasternodePubkey+'</a>';
-                            }
-                            else {
-                                outtxt += '<a href="'+axeninjamndetail[axeninjatestnet][i][0].replace('%%a%%',data.MasternodePubkey)+'">['+ix+']</a>';
-                            }
-                            ix++;
-                        }
                         for ( var i=0, ien=axeninjaaddressexplorer[axeninjatestnet].length ; i<ien ; i++ ) {
                             if (ix == 0) {
-                                outtxt += '<a href="'+axeninjaaddressexplorer[axeninjatestnet][0][0].replace('%%a%%',data.MasternodePubkey)+'">'+data.MasternodePubkey+'</a>';
+                                outtxt += '<a href="'+axeninjaaddressexplorer[axeninjatestnet][0][0].replace('%%a%%',data.state.payoutAddress)+'">'+data.state.payoutAddress+'</a>';
                             }
                             else {
-                                outtxt += '<a href="'+axeninjaaddressexplorer[axeninjatestnet][i][0].replace('%%a%%',data.MasternodePubkey)+'">['+ix+']</a>';
+                                outtxt += '<a href="'+axeninjaaddressexplorer[axeninjatestnet][i][0].replace('%%a%%',data.state.payoutAddress)+'">['+ix+']</a>';
                             }
                             ix++;
                         }
                     }
                     else {
-                        outtxt = data.MasternodePubkey;
+                        outtxt = data.state.payoutAddress;
                     }
                 }
                 else {
-                    outtxt = data.MasternodePubkey;
+                    outtxt = data.state.payoutAddress;
                 }
                 return outtxt;
             } },
             { data: null, render: function ( data, type, row ) {
                 var mnip = "";
-                if ( data.MasternodeIP == "::" ) {
-                    mnip = data.MasternodeTor+".onion";
-                }
-                else {
-                    mnip = data.MasternodeIP;
-                }
-                return mnip+':'+data.MasternodePort;
+                mnip = data.state.addrIP;
+                return mnip+':'+data.state.addrPort;
             } },
             { data: null, render: function ( data, type, row) {
-                    var activecount = parseInt(data.ActiveCount);
-                    var inactivecount = parseInt(data.InactiveCount);
-                    var unlistedcount = parseInt(data.UnlistedCount);
-                    var total = activecount+inactivecount+unlistedcount;
+                    var activecount = parseInt(data.state.activeCount);
+                    var inactivecount = parseInt(data.state.inactiveCount);
+                    var total = activecount+inactivecount;
                     var ratio = activecount / total;
                     var result = ratio;
                     if (type == 'sort') {
                         result =  ratio;
                     } else {
                         if ( ratio == 1 ) {
-                            result = 'Active';
+                            result = 'Valid';
                         } else if ( ratio == 0 ) {
-                            result = 'Inactive';
+                            result = 'Unlisted';
                         } else if ( unlistedcount > 0 ) {
                             result = 'Partially Unlisted';
                         } else {
@@ -708,66 +699,60 @@ $(document).ready(function() {
                 return versioninfo;
             } },
             { data: null, render: function ( data, type, row ) {
-                return data.MasternodeProtocol;
+                return data.state.registeredHeight;
             } },
             { data: null, render: function ( data, type, row) {
-                var balance = parseFloat(data.Balance.Value);
-                if (type == 'sort') {
-                    return balance;
-                }
-                else {
-                    var num = Math.round( balance * 1000 ) / 1000;
-                    return addCommas( num.toFixed(3) );
-                }
-            } },
-            { data: null, render: function ( data, type, row) {
-                var lastpaid = parseInt(data.MasternodeLastPaid);
-                if (lastpaid > 0) {
-                    if (type == 'sort') {
-                        return lastpaid;
+                    if (data.Balance == false) {
+                        return "Unknown";
                     }
                     else {
-                        var outtxt = '';
-                        outtxt = deltaTimeStampHR(lastpaid,currenttimestamp());
-                        return outtxt;
+                        var balance = parseFloat(data.Balance.Value);
+                        if (type == 'filter') {
+                            return balance;
+                        }
+                        else {
+                            var num = Math.round(balance * 1000) / 1000;
+                            return addCommas(num.toFixed(3));
+                        }
                     }
-                }
-                else {
-                    if (type == 'sort') {
-                        return 0;
+            } },
+            { data: null, render: function ( data, type, row) {
+                var lastpaid = parseInt(data.state.lastPaidHeight);
+                return lastpaid;
+            } },
+            { data: null, render: function ( data, type, row) {
+                return data.state.PoSePenalty;
+            } },
+            { data: null, render: function ( data, type, row) {
+                    var outtxt = '';
+                    if (type != 'filter') {
+                        if ((data.state.operatorRewardAddress != '') && (axeninjaaddressexplorer[axeninjatestnet].length > 0)) {
+                            var ix = 0;
+                            for ( var i=0, ien=axeninjaaddressexplorer[axeninjatestnet].length ; i<ien ; i++ ) {
+                                if (ix == 0) {
+                                    outtxt += '<a href="'+axeninjaaddressexplorer[axeninjatestnet][0][0].replace('%%a%%',data.state.operatorRewardAddress)+'">'+data.state.operatorRewardAddress+'</a>';
+                                }
+                                else {
+                                    outtxt += '<a href="'+axeninjaaddressexplorer[axeninjatestnet][i][0].replace('%%a%%',data.state.operatorRewardAddress)+'">['+ix+']</a>';
+                                }
+                                ix++;
+                            }
+                        }
+                        else {
+                            outtxt = data.state.operatorRewardAddress;
+                        }
                     }
                     else {
-                        return 'Never/Unknown';
+                        outtxt = data.state.operatorRewardAddress;
                     }
-                }
-            } },
-            { data: null, render: function ( data, type, row) {
-                var activeseconds = parseInt(data.MasternodeActiveSeconds);
-                if (type == 'sort') {
-                    return activeseconds;
-                } else if (activeseconds < 0) {
-                    return 'Just now ('+activeseconds+')';
-                }
-                else {
-                    return diffHR(activeseconds);
-                }
-            } },
-            { data: null, render: function ( data, type, row) {
-                if (type == 'sort') {
-                    return data.MasternodeLastSeen;
-                } else if (data.MasternodeLastSeen > 0) {
-                    return deltaTimeStampHR(data.MasternodeLastSeen,currenttimestamp());
-                } else {
-                    return '';
-                }
+                    return outtxt;
             } },
         ],
         "createdRow": function ( row, data, index ) {
             axeversioncheck = getLatestaxeVersion();
-            var activecount = parseInt(data.ActiveCount);
-            var inactivecount = parseInt(data.InactiveCount);
-            var unlistedcount = parseInt(data.UnlistedCount);
-            var total = activecount+inactivecount+unlistedcount;
+            var activecount = parseInt(data.state.activeCount);
+            var inactivecount = parseInt(data.state.inactiveCount);
+            var total = activecount+inactivecount;
             var ratio = activecount / total;
             if (ratio == 1) {
                 color = 'success';
@@ -776,7 +761,7 @@ $(document).ready(function() {
             } else {
                 color = 'warning';
             }
-            $('td',row).eq(4).removeClass("danger").removeClass("success").removeClass("warning").addClass(color).css({"text-align": "center"});
+            $('td',row).eq(5).removeClass("danger").removeClass("success").removeClass("warning").addClass(color).css({"text-align": "center"});
             var color = 'danger';
             if ( data.Portcheck == false ) {
                 color = 'warning';
@@ -788,12 +773,15 @@ $(document).ready(function() {
                     color = 'warning';
                 }
             }
-            $('td',row).eq(5).removeClass("danger").removeClass("success").removeClass("warning").addClass(color).css({"text-align": "center"});
+            $('td',row).eq(6).removeClass("danger").removeClass("success").removeClass("warning").addClass(color).css({"text-align": "center"});
             color = 'success';
-            if ( data.Balance.Value < 1000 ) {
+            if ( data.Balance == false ) {
+                color = 'warning';
+            }
+            else if ( data.Balance.Value < 1000 ) {
                 color = 'danger';
             }
-            $('td',row).eq(8).removeClass("danger").removeClass("success").addClass(color).css({"text-align": "right"});
+            $('td',row).eq(9).removeClass("danger").removeClass("success").removeClass("info").addClass(color).css({"text-align": "right"});
             var versioninfo = "Unknown";
             if ((data.Portcheck != false) && data.Portcheck.hasOwnProperty("SubVer")) {
                 if ((data.Portcheck.SubVer.length > 10) && (data.Portcheck.SubVer.substring(0, 9) == '/Satoshi:') && (data.Portcheck.SubVer.substring(data.Portcheck.SubVer.length - 1) == '/')) {
@@ -809,8 +797,8 @@ $(document).ready(function() {
             if ( versioninfo == "Unknown" ) {
                 color = 'active';
             }
-            else if ( versioninfo.substring(0,8) == "0.12.3.1"  ) {
-                color = 'warning';
+            else if ( ( versioninfo.substring(0,5) == "0.10." ) || ( versioninfo.substring(0,7) == "0.11." ) ) {
+                color = 'danger';
             }
             else if ( versioninfo == axeversioncheck ) {
                 color = 'success';
@@ -818,18 +806,14 @@ $(document).ready(function() {
             else {
                 color = 'danger';
             }
-            $('td',row).eq(6).removeClass("danger").removeClass("success").removeClass("warning").removeClass("active").addClass(color);
-            var curprotocol = parseInt(data.MasternodeProtocol);
-            if ( curprotocol < 70208 ) {
+            $('td',row).eq(7).removeClass("danger").removeClass("success").removeClass("warning").removeClass("active").addClass(color);
+            if ( data.state.PoSePenalty != 0 ) {
                 color = 'danger';
             }
-            else if ( curprotocol == axemaxprotocol ) {
+            else {
                 color = 'success';
             }
-            else {
-                color = 'warning';
-            }
-            $('td',row).eq(7).removeClass("danger").removeClass("success").addClass(color).css({"text-align": "right"});
+            $('td',row).eq(11).removeClass("danger").removeClass("success").addClass(color);
         }
     } );
     var mnlistsize = getParameter("mnlistsize");

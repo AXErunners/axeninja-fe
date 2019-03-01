@@ -242,12 +242,39 @@ function generate_masternodeslistfull_json_files($mysqli, $testnet = 0) {
         'data' => array('masternodes' => $nodes,
             'cache' => array('time' => time(),
                 'fromcache' => true),
-            'api' => array('version' => 3,
+            'api' => array('version' => 4,
                 'compat' => 3,
                 'bev' => 'mnfl='.AXENINJA_BEV.'.'.AXENINJA_CRONVERSION)
         ));
 
     save_json("masternodeslistfull",$data,DMN_CRON_MNFL_SEMAPHORE,$testnet);
+
+}
+
+function generate_protxfull_json_files($mysqli, $testnet = 0) {
+
+    xecho("Generating full deterministric masternodes list:\n");
+    semaphore(DMN_CRON_PROTX_SEMAPHORE);
+
+    xecho("--> Retrieve deterministric masternodes list: ");
+
+    $nodes = dmn_protx_get($mysqli, $testnet, array(), array(), array());
+    if (!is_array($nodes)) {
+        echo "Failed!\n";
+        die2(1,DMN_CRON_PROTX_SEMAPHORE);
+    }
+    echo "OK (".count($nodes).")\n";
+
+    $data = array('status' => 'OK',
+        'data' => array('protx' => $nodes,
+            'cache' => array('time' => time(),
+                'fromcache' => true),
+            'api' => array('version' => 1,
+                'compat' => 1,
+                'bev' => 'protx='.AXENINJA_BEV.'.'.AXENINJA_CRONVERSION)
+        ));
+
+    save_json("protxfull",$data,DMN_CRON_PROTX_SEMAPHORE,$testnet);
 
 }
 
@@ -308,6 +335,7 @@ function generate_blocks24h_json_files($mysqli, $testnet = 0) {
     $sql = sprintf("SELECT BlockId, BlockHash, cib.BlockMNPayee BlockMNPayee, BlockMNPayeeDonation, BlockMNValue, BlockSupplyValue, BlockMNPayed, BlockPoolPubKey, PoolDescription, BlockMNProtocol, BlockTime, BlockDifficulty, BlockMNPayeeExpected, BlockMNValueRatioExpected, IsSuperblock, SuperBlockBudgetName, BlockDarkSendTXCount, MemPoolDarkSendTXCount, SuperBlockBudgetPayees, SuperBlockBudgetAmount, BlockVersion FROM cmd_info_blocks cib LEFT JOIN cmd_pools_pubkey cpp ON cib.BlockPoolPubKey = cpp.PoolPubKey AND cib.BlockTestNet = cpp.PoolTestNet WHERE cib.BlockTestNet = %d AND cib.BlockTime >= %d ORDER BY BlockId DESC",$testnet,$datefrom);
     $blocks = array();
     $maxprotocol = 0;
+    $maxversion = 0;
     $blockidlow = 9999999999;
     $blockidhigh = 0;
     $sqlwheretemplate = "BlockHeight = %d";
@@ -317,6 +345,9 @@ function generate_blocks24h_json_files($mysqli, $testnet = 0) {
         while($row = $result->fetch_assoc()){
             if ($row['BlockMNProtocol'] > $maxprotocol) {
                 $maxprotocol = $row['BlockMNProtocol'];
+            }
+            if ($row['BlockVersion'] > $maxversion) {
+                $maxversion = $row['BlockVersion'];
             }
             if ($row['BlockId'] > $blockidhigh) {
                 $blockidhigh = $row['BlockId'];
@@ -466,8 +497,7 @@ function generate_blocks24h_json_files($mysqli, $testnet = 0) {
                 $perversion[$block['BlockVersion']]['BlocksPayedIncorrectRatio']++;
                 $correctpayment = false;
             }
-            //if ($block['BlockMNProtocol'] == $maxprotocol) {
-            if ($block['BlockVersion'] == 0x20000004) {
+            if ($block['BlockVersion'] == $maxversion) {
                 $perminer[$minerkey]['BlocksPayedToCurrentProtocol'] += $block['BlockMNPayed'];
                 if ($correctpayment) {
                     $perminer[$minerkey]['BlocksPayedCorrectly']++;
@@ -502,7 +532,8 @@ function generate_blocks24h_json_files($mysqli, $testnet = 0) {
                 'BlocksPayedCorrectly' => 0,
                 'SupplyAmount' => 0.0,
                 'MNPaymentsAmount' => 0.0,
-                'MaxProtocol' => intval($maxprotocol));
+                'MaxProtocol' => intval($maxprotocol),
+                'MaxVersion' => intval($maxversion));
         foreach($perminer as $miner => $info) {
             $divamount = ($perminer[$miner]['TotalAmount']-$perminer[$miner]['BudgetAmount']-$perminer[$miner]['SuperBlockPoolAmount']);
             if ($divamount == 0) {
@@ -866,6 +897,9 @@ function generate_governanceproposals_json_files($mysqli, $testnet = 0) {
                 "LastReported" => strtotime($row["LastReported"])
             );
             $proposalsvalid += intval($row["GovernanceObjectBlockchainValidity"]);
+            if (($row['GovernanceObjectEpochStart'] <= $nextsuperblocktimestamp) && ($row['GovernanceObjectEpochEnd'] > time())) {
+                $proposalsfunded += intval($row["GovernanceObjectCachedFunding"]);
+            }
         }
 
         usort($proposals,"cmpproposals");
@@ -1107,13 +1141,12 @@ function generate_blockssuperblocks_json_files($mysqli, $testnet = 0) {
 
 }
 
-
-
 xecho('AXE Ninja Front-End JSON Generator cron v'.AXENINJA_BEV.'.'.AXENINJA_CRONVERSION."\n");
 
 if ($argc != 3) {
     xecho("Usage: ".$argv[0]." main|testnet <command>\n");
     xecho("Command can be: masternodeslistfull = Generate the full masternodes list in data folder\n");
+    xecho("                protxfull = Generate the full deterministic masternodes list in data folder\n");
     xecho("                blocks24h = Generate the full last 24h blocks list in data folder\n");
     xecho("                nodesstatus = Generate monitoring nodes status in data folder\n");
     xecho("                blocksconsensus = Generate block consensus in data folder\n");
@@ -1135,6 +1168,9 @@ else {
 
 if ($argv[2] == "masternodeslistfull") {
     generate_masternodeslistfull_json_files($mysqli, $testnet);
+}
+elseif ($argv[2] == "protxfull") {
+    generate_protxfull_json_files($mysqli, $testnet);
 }
 elseif ($argv[2] == "blocks24h") {
     generate_blocks24h_json_files($mysqli, $testnet);

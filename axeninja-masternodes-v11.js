@@ -18,7 +18,7 @@
  */
 
 // AXE Ninja Front-End (axeninja-fe) - Masternode List (v2)
-// By elberethzone / https://axetalk.org/members/elbereth.175/
+// By elberethzone / https://dashtalk.org/members/axerunners.175/
 
 var axeninjaversion = '2.1.7';
 var tableLocalNodes = null;

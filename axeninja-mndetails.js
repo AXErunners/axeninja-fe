@@ -18,7 +18,7 @@
  */
 
 // AXE Ninja Front-End (axeninja-fe) - Masternode Detail
-// By elberethzone / https://axetalk.org/members/elbereth.175/
+// By elberethzone / https://dashtalk.org/members/axerunners.175/
 
 var axeninjaversion = '3.3.0';
 var tablePayments = null;

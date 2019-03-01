@@ -21,7 +21,7 @@ along with AXE Ninja.  If not, see <http://www.gnu.org/licenses/>.
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AXE Ninja - Masternodes Monitoring</title>
+    <title>AXE Ninja - Deterministic Masternodes Monitoring</title>
 
     <link rel="icon" href="/static/axeninja-favicon.ico" />
     <link rel="icon" type="image/png" href="/static/axeninja-favicon.png" />
@@ -48,12 +48,12 @@ along with AXE Ninja.  If not, see <http://www.gnu.org/licenses/>.
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/"><img style="margin-top: -13px; border-top: 0px; border-bottom: 0px; margin-right: 10px;" src="/static/axeninja-logo48x48.png" width="48" height="48" align="left"> AXE Ninja<span id="testnettitle" style="display: none"> (TESTNET)</a>
+            <a class="navbar-brand" href="/"><img style="margin-top: -13px; border-top: 0px; border-bottom: 0px; margin-right: 10px;" src="/static/axeninja-logo48x48.png" width="48" height="48" align="left"> AXE Ninja<span id="testnettitle" style="display: none"> (TESTNET)</span></a>
         </div>
         <div class="collapse navbar-collapse navbar-collapse" role="navigation">
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="/blocks.html"><i class="fa fa-link fa-fw" aria-hidden="true"></i> Blockchain</a></li>
-                <li class="active"><a href="/masternodes.html"><i class="fa fa-server fa-fw" aria-hidden="true"></i> Masternodes</a></li>
+                <li class="active"><a href="/deterministic-masternodes.html"><i class="fa fa-server fa-fw" aria-hidden="true"></i> Masternodes</a></li>
                 <li><a href="/governance.html"><i class="fa fa-balance-scale fa-fw" aria-hidden="true"></i> Governance</a></li>
                 <li><a name="menuitemexplorer" href="https://explorer.axeninja.pl"><i class="fa fa-search fa-fw" aria-hidden="true"></i> Explorer</a></li>
                 <li class="dropdown">
@@ -88,7 +88,7 @@ along with AXE Ninja.  If not, see <http://www.gnu.org/licenses/>.
     <div id="page-wrapper">
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header"><i class="fa fa-server" aria-hidden="true"></i> Masternodes Monitoring <span class="badge badge-secondary">Links: <a href="/masternodes.html"><i class="fa fa-link"></i></a><span name="axeninjatordisplay" style="display: none;"> - <a name="axeninjatorurl" href="#">Tor</a></span><span name="axeninjai2pdisplay" style="display: none;"> - <a name="axeninjai2purl" href="#">I2P</a></span></span> <span class="label label-danger" id="testnetalert" style="display: none">THIS IS TESTNET!</span></h1>
+                <h1 class="page-header"><i class="fa fa-server" aria-hidden="true"></i> Deterministic Masternodes Monitoring <span class="badge badge-secondary">Links: <a href="/masternodes.html"><i class="fa fa-link"></i></a><span name="axeninjatordisplay" style="display: none;"> - <a name="axeninjatorurl" href="#">Tor</a></span><span name="axeninjai2pdisplay" style="display: none;"> - <a name="axeninjai2purl" href="#">I2P</a></span></span> <span class="label label-danger" id="testnetalert" style="display: none">THIS IS TESTNET!</span></h1>
             </div>
         </div>
         <div class="row">
@@ -98,7 +98,7 @@ along with AXE Ninja.  If not, see <http://www.gnu.org/licenses/>.
                         AXE Ninja info
                     </div>
                     <div class="panel-body">
-                        By <a class="badge badge-primary" href="https://keybase.io/axerunners/">axerunnerszone</a> / Time <span class="label label-info">GMT/UTC</span> / HTML <span class="label label-info">2.5.4</span> / JavaScript <span class="label label-danger" id="axeninjajsversion">required</span>
+                        By <a class="badge badge-primary" href="https://keybase.io/axerunners/">axerunnerszone</a> / Time <span class="label label-info">GMT/UTC</span> / HTML <span class="label label-info">0.2.0</span> / JavaScript <span class="label label-danger" id="axeninjajsversion">required</span>
                     </div>
                     <div class="panel-footer">
                         <span class="pull-left">Donations:</span>
@@ -155,7 +155,6 @@ along with AXE Ninja.  If not, see <http://www.gnu.org/licenses/>.
                         <span class="pull-left">Total:</span><span class="pull-right label label-info" id="mntotal">???</span><br>
                         <span class="pull-left">Inactives:</span><span class="pull-right label label-warning" id="mninactive">???</span><br>
                         <span class="pull-left">Unique IPs:</span><span class="pull-right label label-info" id="uniquemnips">???</span><br><br>
-                        <span class="pull-left"><span id="mnlatestprotocolpercent">??.?</span>% on latest protocol (<span id="mnlatestprotocol">???</span>):</span><span class="pull-right label label-info" id="mnactivelatest">???</span><br><br>
                         An estimated daily payout per masternode version can be seen <a href="/blocks.html#perversion">here</a>.
                     </div>
                     <div class="panel-footer">
@@ -327,17 +326,18 @@ along with AXE Ninja.  If not, see <http://www.gnu.org/licenses/>.
                 <thead>
                 <tr>
                     <th data-priority="1"></th>
-                    <th data-priority="12">Vin (Hash-Index)</th>
+                    <th data-priority="6">ProTx Hash</th>
+                    <th data-priority="13">Vin (Hash-Index)</th>
                     <th data-priority="11">Pubkey</th>
                     <th data-priority="4">IP:Port</th>
                     <th data-priority="2">Status<br>(Active Score)</th>
                     <th data-priority="3">Port Check<br>(Next check)</th>
                     <th data-priority="5">Version</th>
-                    <th data-priority="6">Protocol</th>
+                    <th data-priority="10">Registered<br>Height</th>
                     <th data-priority="7">Balance</th>
-                    <th data-priority="8">Last Paid</th>
-                    <th data-priority="9">Active Duration</th>
-                    <th data-priority="10">Last Seen</th>
+                    <th data-priority="8">Last Paid Block</th>
+                    <th data-priority="9">PoSe<br>Penalty</th>
+                    <th data-priority="12">Operator</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -365,7 +365,7 @@ along with AXE Ninja.  If not, see <http://www.gnu.org/licenses/>.
     <script src="/static/datatables/datatables.min.js"></script>
     <script src="axeninja-config.js"></script>
     <script src="axeninja-common.js"></script>
-    <script src="axeninja-masternodes.js"></script>
+    <script src="axeninja-deterministic-masternodes.js"></script>
 </body>
 </html>
 

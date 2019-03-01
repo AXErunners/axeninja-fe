@@ -18,7 +18,7 @@
  */
 
 // AXE Ninja Front-End (axeninja-fe) - Governance
-// By elberethzone / https://www.axe.org/forum/members/elbereth.175/
+// By elberethzone / https://www.dash.org/forum/members/elbereth.175/
 
 var axeninjaversion = '1.6.3';
 var tableGovernance = null;

@@ -18,7 +18,7 @@
  */
 
 // AXE Ninja Front-End (axeninja-fe) - Budgets
-// By elberethzone / https://axetalk.org/members/elbereth.175/
+// By elberethzone / https://dashtalk.org/members/axerunners.175/
 
 var axeninjaversion = '1.5.2';
 var tableBudgets = null;
